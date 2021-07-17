@@ -7,6 +7,16 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
+const esvaziarCarrinho = () => {
+  const botaoEsvaziar = document.querySelector('.empty-cart');
+  botaoEsvaziar.addEventListener('click', () => {
+    const cartItens = document.querySelectorAll('.cart__item');
+    cartItens.forEach((item) => {
+      item.remove();
+    });
+  });
+};
+
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -77,4 +87,5 @@ const fetchApi = async () => {
 
 window.onload = () => {
   fetchApi();
+  esvaziarCarrinho();
 };
