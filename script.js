@@ -36,14 +36,25 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   return li;
 }
 
+const olElement = document.querySelector('.cart__items');
+
+function save() {
+  localStorage.setItem('cars', olElement.innerHTML);
+}
+
+function pegar() {
+  olElement.innerHTML = localStorage.getItem('cars');
+}
+
 const segundaFetch = async (event) => {
   const id = event.target.parentElement.firstChild.innerText;
   const resolve = await fetch(`https://api.mercadolibre.com/items/${id}`);
   const objetoRetornado = await resolve.json();
-  const myOl = document.querySelector('ol');
+  const myOl = document.querySelector('.cart__items');
   const itemCriado = createCartItemElement(objetoRetornado);
 
   myOl.appendChild(itemCriado);
+  save();
 };
 
 function createProductItemElement({ sku, name, image }) {
@@ -58,11 +69,6 @@ function createProductItemElement({ sku, name, image }) {
 
   return section;
 }
-
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
-
 // FUNÇÃO PARA TRATAR O OBJETO
 const newObject = (objetoRetornado) => {
   const sectionItems = document.querySelector('.items');
@@ -80,12 +86,19 @@ const newObject = (objetoRetornado) => {
 };
 
 const fetchApi = async () => {
+  try {
   const resposta = await fetch(`${myUrl}computador`);
   const objetoRetornado = await resposta.json();
+  const element = document.querySelector('.loading');
+  element.remove();
   newObject(objetoRetornado);
+  } catch (error) {
+    alert(error.message);
+  }
 };
 
 window.onload = () => {
   fetchApi();
   esvaziarCarrinho();
+  pegar();
 };
